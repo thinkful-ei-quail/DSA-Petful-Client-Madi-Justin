@@ -1,0 +1,12 @@
+.adoption-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 500px;
+    align-self: center;
+    text-align: center;
+    color: black;
+    margin: auto;
+    font-weight: bolder;
+}

@@ -11,7 +11,7 @@ const AdoptionPage = (props) => {
   return (
     <div>
       <section className="adoption-info">
-        <p>This is the adoption page info!</p>
+        <p>Welcome to the adoption queue.</p>
        <button className="adopt-button" onClick={() => handleStart()}>Adopt a Pet</button>
       </section>
     </div>
