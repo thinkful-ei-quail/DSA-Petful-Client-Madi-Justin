@@ -59,14 +59,15 @@ class App extends Component {
     //   getStudents: this.getStudents,
     }
     return (
-      <AppContext.Provider value={value}>
+
       <div className='App'>
-        <Switch>
-          <Route path= {'/'} component={LandingPage}/>
-          <Route path={'/adoption'} component={AdoptionPage}/>
-        </Switch>
+        <AppContext.Provider value={value}>
+          <Switch>
+              <Route exact path= {'/'} component={LandingPage}/>
+              <Route path={'/adoption'} component={AdoptionPage}/>
+          </Switch>
+        </AppContext.Provider>
       </div>
-      </AppContext.Provider>
     );
   }
 }
