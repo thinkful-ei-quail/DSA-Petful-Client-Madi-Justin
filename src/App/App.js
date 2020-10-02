@@ -4,31 +4,28 @@ import './App.css'
 import LandingPage from '../routes/LandingPage';
 import AdoptionPage from '../routes/AdoptionPage';
 import AppContext from '../contexts/contexts'
-import config from "../config"
-// import TokenService from '../services/token-service'
-
+import config from '../../config';
 
 
 class App extends Component {
-//   state = {
-//     students: []
-//   }
+  state = {
+    pets: [],
+    adopters: []
+  }
 
-//   componentDidMount() {
-//     this.getStudents()
-//   }
+  componentDidMount() {
+    this.getPets()
+    this.getAdopters()
+  }
   
-//   getStudents = () => {
-//     if(TokenService.hasAuthToken()) {
-//       const id = TokenService.readJwtToken().user_id
-//       console.log(id)
-//       fetch(`${config.API_ENDPOINT}/students/users/${id}`)
+//   getPets = () => {
+//     fetch(`${config.API_ENDPOINT}/pets/${id}`)
 //       .then(res => res.json())
-//       .then(students => {
-//         this.setState({students})
+//       .then(pets => {
+//         this.setState({pets})
 //       })
 //     }
-//   }
+  
 
 //   clearStudents = () => {
 //     this.setState({students:[]})
@@ -59,7 +56,7 @@ class App extends Component {
       <AppContext.Provider value={value}>
       <div className='App'>
         <Switch>
-        <Route exact path = '/' component = {LandingPage}/>
+        <Route path= {'/'} component={LandingPage}/>
         <Route path={'/adoption'} component={AdoptionPage}/>
         </Switch>
       </div>
