@@ -4,8 +4,6 @@ import './App.css'
 import LandingPage from '../routes/LandingPage/LandingPage';
 import AdoptionPage from '../routes/AdoptionPage/AdoptionPage';
 import AppContext from '../contexts/contexts'
-import config from '../../config';
-
 
 class App extends Component {
   state = {
