@@ -15,6 +15,14 @@ class App extends Component {
     this.getPets()
     this.getAdopters()
   }
+
+  getPets = () => {
+
+  }
+
+  getAdopters = () => {
+
+  }
   
 //   getPets = () => {
 //     fetch(`${config.API_ENDPOINT}/pets/${id}`)
@@ -54,8 +62,8 @@ class App extends Component {
       <AppContext.Provider value={value}>
       <div className='App'>
         <Switch>
-        <Route path= {'/'} component={LandingPage}/>
-        <Route path={'/adoption'} component={AdoptionPage}/>
+          <Route path= {'/'} component={LandingPage}/>
+          <Route path={'/adoption'} component={AdoptionPage}/>
         </Switch>
       </div>
       </AppContext.Provider>
