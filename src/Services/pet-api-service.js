@@ -1,28 +1,29 @@
 import config from '../config';
 
 const PetApiService = {
-  getPets() {
-    return fetch(`${config.API_ENDPOINT}/hangar`, {
+  
+  postName(nameQueue) {
+    fetch(`${config.API_ENDPOINT}/people`, {
+      method: 'POST',
       headers: {
-        'content-type': 'application/json',
+        'content-type': 'application/json'
       },
+      body: nameQueue
     })
-    .then(res =>
-      (!res.ok)
-        ? res.json().then(e => Promise.reject(e))
-        : res.json()
-    )
+      .then(res => res.json())
+  },
+  getPets() {
+    return fetch(`${config.API_ENDPOINT}/pets`)
+      .then(res => {
+        return res.json();
+      })
   },
   getPeople() {
-    return fetch(`${config.API_ENDPOINT}/hangar`, {
-      headers: {
-        'content-type': 'application/json',
-      },
-    })
-    .then(res =>
-      (!res.ok)
-        ? res.json().then(e => Promise.reject(e))
-        : res.json()
-    )
+    return fetch(`${config.API_ENDPOINT}/people`)
+      .then(res => {
+        return res.json();
+      })
   }
 }
+
+export default PetApiService;

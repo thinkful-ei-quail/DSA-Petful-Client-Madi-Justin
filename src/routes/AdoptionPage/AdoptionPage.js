@@ -6,6 +6,7 @@ import Pets from '../../components/Pets/Pets';
 import EnterQueue from '../../components/EnterQueue/EnterQueue'
 import AdoptButtons from '../../components/AdoptButtons/AdoptButtons';
 import Confirmation from '../../components/Confirmation/Confirmation';
+import PetApiService from '../../Services/pet-api-service'
 
 export default class MainPage extends React.Component {
   state = {
@@ -47,10 +48,7 @@ export default class MainPage extends React.Component {
   }
 
   getPeople = () => {
-    fetch(`${config.API_ENDPOINT}/people`)
-      .then(res => {
-        return res.json();
-      })
+    PetApiService.getPeople()
       .then(resJson => {
         this.setState({
           people: resJson
@@ -59,10 +57,7 @@ export default class MainPage extends React.Component {
   }
 
   getPets = () => {
-    fetch(`${config.API_ENDPOINT}/pets`)
-      .then(res => {
-        return res.json();
-      })
+    PetApiService.getPets()
       .then(resJson => {
         this.setState({
           pets: resJson
@@ -72,10 +67,16 @@ export default class MainPage extends React.Component {
 
   dequeuePeople = () => {
     const randomUsers = [
-      'Billy Bob',
-      'Han Solo',
-      'Gandalf',
-      'Kratos'
+      'Raakel Atkinson',
+      'Shazia Cokes',
+      'Laura Krückel',
+      'Marietta Lund',
+      'Eddy Kuntz',
+      'Nina Abelen',
+      'Samuel Barnes',
+      'Osane PPorter',
+      'Seo-Yun Anjali Roach',
+      "Emīls Agnes O'Mooney"
     ]
     setInterval(() => {
       //If current user is in front or there are no more in queue

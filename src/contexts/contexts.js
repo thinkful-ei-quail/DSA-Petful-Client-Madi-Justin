@@ -1,12 +1,8 @@
 import React from 'react';
 
 const AppContext = React.createContext({
-    pets: [],
+    pets: {},
     adopters: [],
-    getPets: () => {},
-    getAdopters: () => {},
-    removePet: () => {},
-    removeAdopter: () => {}
 })
 
 export default AppContext;
