@@ -3,10 +3,26 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 500px;
+    /* width: 500px; */
     align-self: center;
     text-align: center;
     color: black;
     margin: auto;
     font-weight: bolder;
+}
+
+.Main-Page {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+h1 {
+    display: inline-flex;
+    justify-content: center;
+}
+
+.People {
+    display: inline-flex;
+    justify-content: center;
 }

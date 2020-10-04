@@ -1,0 +1,13 @@
+.Pets {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.Dog {
+  display: inline-flex;
+}
+
+.Cat {
+  display: inline-flex;
+}
