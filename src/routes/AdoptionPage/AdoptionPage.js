@@ -37,18 +37,23 @@ export default class MainPage extends React.Component {
         console.log(window.localStorage.getItem('petful_username'));
         this.setState({
           people: [...this.state.people, resJson],
+          name: ''
         })
       })
+      
+      this.dequeuePeople()
   }
 
   componentDidMount = () => {
     this.getPeople();
     this.getPets();
-    this.dequeuePeople();
   }
 
   getPeople = () => {
-    PetApiService.getPeople()
+    fetch(`${config.API_ENDPOINT}/people`)
+      .then(res => {
+        return res.json();
+      })
       .then(resJson => {
         this.setState({
           people: resJson
@@ -57,7 +62,10 @@ export default class MainPage extends React.Component {
   }
 
   getPets = () => {
-    PetApiService.getPets()
+    fetch(`${config.API_ENDPOINT}/pets`)
+      .then(res => {
+        return res.json();
+      })
       .then(resJson => {
         this.setState({
           pets: resJson
@@ -79,57 +87,47 @@ export default class MainPage extends React.Component {
       "Emīls Agnes O'Mooney"
     ]
     setInterval(() => {
+      console.log('interval')
       //If current user is in front or there are no more in queue
       if ((window.localStorage.getItem('petful_username') !== this.state.people[0]) &&
         this.state.people.length > 0) {
+
         let randomPet = ['cats', 'dogs'][Math.floor(Math.random() * 2)]
-
-        fetch(`${config.API_ENDPOINT}/pets`,
-          {
-            method: 'DELETE',
-            headers: {
-              'content-type': 'application/json'
-            },
-            body: JSON.stringify({
-              pet: randomPet
-            })
-          })
-
-
-        fetch(`${config.API_ENDPOINT}/people`,
-          {
-            method: 'DELETE',
-            headers: {
-              'content-type': 'application/json'
+          Promise.all([PetApiService.removeRandomPet(randomPet), PetApiService.removeFrontPerson()])
+            .then(() => {
+              if(randomPet === 'cats') {
+              this.setState({
+                pets: {
+                  cat: [...this.state.pets.cat.slice(1)],
+                  dog: [...this.state.pets.dog]
+                },
+                people: this.state.people.slice(1)
+              })
+            } else if(randomPet === 'dogs') {
+              this.setState({
+                pets: {
+                  cat: [...this.state.pets.cat],
+                  dog: [...this.state.pets.dog.slice(1)]
+                },
+                people: this.state.people.slice(1)
+              })
             }
-          })
-          .then(res => {
-            this.setState({
-              people: this.state.people.slice(1, this.state.people.length)
             })
-          })
-          .then(() => {
-            this.getPets();
-          })
+            .catch( e => {
+                console.log(e)
+              })
       }
       else if (this.state.people.length < 5) {
-        fetch(`${config.API_ENDPOINT}/people`, {
-          method: 'POST',
-          headers: {
-            'content-type': 'application/json'
-          },
-          body: JSON.stringify(
-            {
-              name: randomUsers[Math.floor((Math.random() * 4))]
+        let randomPerson = randomUsers[Math.floor((Math.random() * 4))]
+
+        PetApiService.addRandomPerson(randomPerson)
+          .then(() => {
+              this.setState({
+                people: [...this.state.people, randomPerson]
+              })
             }
           )
-        })
-          .then(res => res.json())
-          .then(resJSON => {
-            this.setState({
-              people: [...this.state.people, resJSON]
-            })
-          });
+          .catch(e => console.log(e))
       }
     }, 5000)
   }
@@ -143,9 +141,35 @@ export default class MainPage extends React.Component {
       this.dequeueAnimal(plural)
     }
     this.dequeuePerson()
+
+    if(pet === 'cat') {
     this.setState({
-      adopted: ''
+      adopted: '',
+      pets: {
+        cat: [...this.state.pets.cat.slice(1)],
+        dog: [...this.state.pets.dog]
+      },
+      people: this.state.people.slice(1)
     })
+  } else if(pet === 'dog') {
+    this.setState({
+      adopted: '',
+      pets: {
+        cat: [...this.state.pets.cat],
+        dog: [...this.state.pets.dog.slice(1)]
+      },
+      people: this.state.people.slice(1)
+    }) 
+  } else if(pet === 'cat and dog') {
+    this.setState({
+      adopted: '',
+      pets: {
+        cat: [...this.state.pets.cat.slice(1)],
+        dog: [...this.state.pets.dog.slice(1)]
+      },
+      people: this.state.people.slice(1)
+    })
+  }
 
   }
 
@@ -176,12 +200,9 @@ export default class MainPage extends React.Component {
         }
       })
       .then(res => {
-        this.setState({
-          people: this.state.people.slice(1, this.state.people.length)
-        })
-      })
-      .then(() => {
-        this.getPets();
+        if(!res) {
+          throw new Error('Something went wrong, try again')
+        }
       })
   }
 
@@ -197,6 +218,11 @@ export default class MainPage extends React.Component {
               pet
             })
           })
+          .then(res => {
+            if(!res) {
+              throw new Error('Something went wrong, try again')
+            }
+          })
   }
 
   render() {
@@ -205,15 +231,14 @@ export default class MainPage extends React.Component {
       <div className='Main-Page'>
         <h1>Pet Adoption Listing</h1>
         <Pets pets={pets} />
-        <div className="People">
+        <div className='People'>
           {window.localStorage.getItem('petful_username') === this.state.people[0]
             && <AdoptButtons
               adoptCat={this.adoptCat}
               adoptDog={this.adoptDog}
               adoptBoth={this.adoptBoth}
             />}
-
-          <EnterQueue handleSubmit={this.handleNameSubmit} handleChange={this.handleNameChange} />
+          <EnterQueue name={this.state.name} handleSubmit={this.handleNameSubmit} handleChange={this.handleNameChange} />
           {adopted 
             && <Confirmation 
               petType={adopted} 

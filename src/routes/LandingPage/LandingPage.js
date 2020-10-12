@@ -5,7 +5,7 @@ import './LandingPage.css'
 const LandingPage = (props) => {
   const handleStart = () => {
     const {history} = props 
-    history.push('./adoption')
+    history.push('/adoption')
   }
 
   return (

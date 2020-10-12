@@ -1,29 +1,64 @@
-import config from '../config';
+import config from '../config'
 
 const PetApiService = {
   
-  postName(nameQueue) {
-    fetch(`${config.API_ENDPOINT}/people`, {
+  removeRandomPet(pet) {
+
+    fetch(`${config.API_ENDPOINT}/pets`,
+      {
+        method: 'DELETE',
+        headers: {
+          'content-type': 'application/json'
+        },
+        body: JSON.stringify({
+          pet: pet
+        })
+      })
+      .then(res => {
+        if(!res) {
+          throw new Error('Something went wrong, try again')
+        } else {
+        return res.json()
+        }
+      })
+  },
+
+  removeFrontPerson() {
+    fetch(`${config.API_ENDPOINT}/people`,
+          {
+            method: 'DELETE',
+            headers: {
+              'content-type': 'application/json'
+            }
+          })
+          .then(res => {
+            if(!res) {
+              throw new Error('Something went wrong, try again')
+            }
+          })
+  },
+
+  addRandomPerson(name) {
+
+    return fetch(`${config.API_ENDPOINT}/people`, {
       method: 'POST',
       headers: {
         'content-type': 'application/json'
       },
-      body: nameQueue
+      body: JSON.stringify(
+        {
+          name
+        }
+      )
     })
-      .then(res => res.json())
-  },
-  getPets() {
-    return fetch(`${config.API_ENDPOINT}/pets`)
-      .then(res => {
-        return res.json();
-      })
-  },
-  getPeople() {
-    return fetch(`${config.API_ENDPOINT}/people`)
-      .then(res => {
-        return res.json();
-      })
+    .then(res => {
+      if(!res) {
+        throw new Error('Something went wrong, try again')
+      } else {
+        return res
+      }
+    })
   }
 }
 
-export default PetApiService;
+export default PetApiService
