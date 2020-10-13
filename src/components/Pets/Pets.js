@@ -4,7 +4,10 @@ import './Pets.css'
 
 
 export default class Pets extends React.Component {
-  
+  static defaultProps = {
+    pets: {}
+  }
+
   displayNextDog = () => {
     const {dog} = this.props.pets;
     if (dog !== undefined) {
@@ -22,16 +25,20 @@ export default class Pets extends React.Component {
     }
   }
   petHtml = (pet) => {
-    console.log("Pets -> petHtml -> pet", pet)
-    return <div className='pet-container'>
-      <h3>{pet.name}</h3>
-      <p>Age: {pet.age}</p>
-      <p>Gender: {pet.gender}</p>
-      <p>Breed: {pet.breed}</p>
-      <img src={pet.imageURL} alt={pet.description} className='Image'/>
-      <p>Description: {pet.description}</p>
-      <p>Why they are here: {pet.story}</p>
-    </div>
+    // console.log("Pets -> petHtml -> pet", pet)
+    if (!pet) {
+      return null;
+    } else {
+      return <div className='pet-container'>
+        <h3>{pet.name}</h3>
+        <p>Age: {pet.age}</p>
+        <p>Gender: {pet.gender}</p>
+        <p>Breed: {pet.breed}</p>
+        <img src={pet.imageURL} alt={pet.description} className='Image'/>
+        <p>Description: {pet.description}</p>
+        <p>Why they are here: {pet.story}</p>
+      </div>
+    }
   }
   render() {
     return (

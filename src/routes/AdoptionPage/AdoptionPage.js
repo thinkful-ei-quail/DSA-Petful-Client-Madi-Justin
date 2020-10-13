@@ -40,13 +40,16 @@ export default class MainPage extends React.Component {
           name: ''
         })
       })
-      
-      this.dequeuePeople()
   }
 
   componentDidMount = () => {
     this.getPeople();
     this.getPets();
+    this.dequeuePeople()
+  }
+
+  componentWillUnmount(){
+    clearInterval(this.interval)
   }
 
   getPeople = () => {
@@ -86,8 +89,8 @@ export default class MainPage extends React.Component {
       'Seo-Yun Anjali Roach',
       "Emīls Agnes O'Mooney"
     ]
-    setInterval(() => {
-      console.log('interval')
+    this.interval = setInterval(() => {
+      // console.log('interval')
       //If current user is in front or there are no more in queue
       if ((window.localStorage.getItem('petful_username') !== this.state.people[0]) &&
         this.state.people.length > 0) {

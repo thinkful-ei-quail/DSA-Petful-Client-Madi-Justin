@@ -3,7 +3,6 @@ import config from '../config'
 const PetApiService = {
   
   removeRandomPet(pet) {
-
     fetch(`${config.API_ENDPOINT}/pets`,
       {
         method: 'DELETE',
@@ -22,7 +21,6 @@ const PetApiService = {
         }
       })
   },
-
   removeFrontPerson() {
     fetch(`${config.API_ENDPOINT}/people`,
           {
@@ -37,9 +35,7 @@ const PetApiService = {
             }
           })
   },
-
   addRandomPerson(name) {
-
     return fetch(`${config.API_ENDPOINT}/people`, {
       method: 'POST',
       headers: {
