@@ -1,12 +1,13 @@
 import React from 'react'
 import './AdoptionPage.css'
-import config from '../../config'
+// import config from '../../config'
 import People from '../../components/People/People';
 import Pets from '../../components/Pets/Pets';
 import EnterQueue from '../../components/EnterQueue/EnterQueue'
 import AdoptButtons from '../../components/AdoptButtons/AdoptButtons';
 import Confirmation from '../../components/Confirmation/Confirmation';
-import PetApiService from '../../Services/pet-api-service'
+import PetApiService from '../../Services/pet-api-service';
+import randomUsers from '../../random-users';
 
 export default class MainPage extends React.Component {
   state = {
@@ -14,6 +15,34 @@ export default class MainPage extends React.Component {
     people: [],
     name: '',
     adopted: ''
+  }
+
+  componentDidMount = () => {
+    this.getPeople()
+    this.getPets();
+    this.dequeuePeople()
+  }
+
+  componentWillUnmount = () => {
+    clearInterval(this.interval)
+  }
+
+  getPeople = () => {
+    PetApiService.getPeople()
+      .then(resJson => {
+        this.setState({
+          people: resJson
+        })
+      })
+  }
+
+  getPets = () => {
+    PetApiService.getPets()
+      .then(resJson => {
+        this.setState({
+          pets: resJson
+        });
+      })
   }
 
   handleNameChange = (e) => {
@@ -24,13 +53,7 @@ export default class MainPage extends React.Component {
 
   handleNameSubmit = (e) => {
     e.preventDefault()
-    fetch(`${config.API_ENDPOINT}/people`, {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json'
-      },
-      body: JSON.stringify({ name: this.state.name })
-    })
+    PetApiService.sendName(this.state.name)
       .then(res => res.json())
       .then(resJson => {
         window.localStorage.setItem('petful_username', resJson)
@@ -42,55 +65,8 @@ export default class MainPage extends React.Component {
       })
   }
 
-  componentDidMount = () => {
-    this.getPeople();
-    this.getPets();
-    this.dequeuePeople()
-  }
-
-  componentWillUnmount(){
-    clearInterval(this.interval)
-  }
-
-  getPeople = () => {
-    fetch(`${config.API_ENDPOINT}/people`)
-      .then(res => {
-        return res.json();
-      })
-      .then(resJson => {
-        this.setState({
-          people: resJson
-        })
-      })
-  }
-
-  getPets = () => {
-    fetch(`${config.API_ENDPOINT}/pets`)
-      .then(res => {
-        return res.json();
-      })
-      .then(resJson => {
-        this.setState({
-          pets: resJson
-        });
-      })
-  }
-
   dequeuePeople = () => {
-    const randomUsers = [
-      'Raakel Atkinson',
-      'Shazia Cokes',
-      'Laura Krückel',
-      'Marietta Lund',
-      'Eddy Kuntz',
-      'Nina Abelen',
-      'Samuel Barnes',
-      'Osane PPorter',
-      'Seo-Yun Anjali Roach',
-      "Emīls Agnes O'Mooney"
-    ]
     this.interval = setInterval(() => {
-      // console.log('interval')
       //If current user is in front or there are no more in queue
       if ((window.localStorage.getItem('petful_username') !== this.state.people[0]) &&
         this.state.people.length > 0) {
@@ -121,7 +97,7 @@ export default class MainPage extends React.Component {
               })
       }
       else if (this.state.people.length < 5) {
-        let randomPerson = randomUsers[Math.floor((Math.random() * 4))]
+        let randomPerson = randomUsers[Math.floor((Math.random() * 10))]
 
         PetApiService.addRandomPerson(randomPerson)
           .then(() => {
@@ -195,37 +171,11 @@ export default class MainPage extends React.Component {
   }
 
   dequeuePerson = () => {
-    fetch(`${config.API_ENDPOINT}/people`,
-      {
-        method: 'DELETE',
-        headers: {
-          'content-type': 'application/json'
-        }
-      })
-      .then(res => {
-        if(!res) {
-          throw new Error('Something went wrong, try again')
-        }
-      })
+    PetApiService.dequeuePerson()
   }
 
   dequeueAnimal = (pet) => {
-    console.log(pet)
-    fetch(`${config.API_ENDPOINT}/pets`,
-          {
-            method: 'DELETE',
-            headers: {
-              'content-type': 'application/json'
-            },
-            body: JSON.stringify({
-              pet
-            })
-          })
-          .then(res => {
-            if(!res) {
-              throw new Error('Something went wrong, try again')
-            }
-          })
+    PetApiService.dequeueAnimal(pet)
   }
 
   render() {

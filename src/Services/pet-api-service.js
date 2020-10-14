@@ -1,9 +1,29 @@
 import config from '../config'
 
 const PetApiService = {
-  
+  getPeople() {
+    return fetch(`${config.API_ENDPOINT}/people`)
+    .then(res => {
+      return res.json();
+    })
+  },
+  getPets() {
+    return fetch(`${config.API_ENDPOINT}/pets`)
+    .then(res => {
+      return res.json();
+    })
+  },
+  sendName(name) {
+    return fetch(`${config.API_ENDPOINT}/people`, {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify({ name: name })
+    })
+  },
   removeRandomPet(pet) {
-    fetch(`${config.API_ENDPOINT}/pets`,
+    return fetch(`${config.API_ENDPOINT}/pets`,
       {
         method: 'DELETE',
         headers: {
@@ -22,7 +42,7 @@ const PetApiService = {
       })
   },
   removeFrontPerson() {
-    fetch(`${config.API_ENDPOINT}/people`,
+    return fetch(`${config.API_ENDPOINT}/people`,
           {
             method: 'DELETE',
             headers: {
@@ -54,6 +74,37 @@ const PetApiService = {
         return res
       }
     })
+  },
+  dequeuePerson() {
+    return fetch(`${config.API_ENDPOINT}/people`,
+    {
+      method: 'DELETE',
+      headers: {
+        'content-type': 'application/json'
+      }
+    })
+    .then(res => {
+      if(!res) {
+        throw new Error('Something went wrong, try again')
+      }
+    })
+  },
+  dequeueAnimal(pet) {
+    fetch(`${config.API_ENDPOINT}/pets`,
+      {
+        method: 'DELETE',
+        headers: {
+          'content-type': 'application/json'
+        },
+        body: JSON.stringify({
+          pet
+        })
+      })
+      .then(res => {
+        if(!res) {
+          throw new Error('Something went wrong, try again')
+        }
+      })
   }
 }
 

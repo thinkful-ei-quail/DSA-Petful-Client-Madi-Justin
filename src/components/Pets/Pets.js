@@ -13,7 +13,7 @@ export default class Pets extends React.Component {
     if (dog !== undefined) {
       return this.petHtml(dog[0]);
     } else {
-    return 'No Dog Available';
+    return 'Loading Dog list';
     }
   }
   displayNextCat = () => {
@@ -21,11 +21,10 @@ export default class Pets extends React.Component {
     if (cat !== undefined) {
       return this.petHtml(cat[0]);
     } else {
-    return 'No Cat Available'
+    return 'Loading Cat list'
     }
   }
   petHtml = (pet) => {
-    // console.log("Pets -> petHtml -> pet", pet)
     if (!pet) {
       return null;
     } else {
